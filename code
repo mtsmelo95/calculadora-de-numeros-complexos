@@ -1,0 +1,198 @@
+#include <stdio.h>
+#include <locale.h>
+#include <math.h>
+
+typedef struct cpl{
+    float a, b;
+} Complexo;
+
+Complexo ler_num( char frase[] ){
+	Complexo n;
+	
+	printf("\n%s\n", frase);
+	printf("\tInforme o valor para a: ");
+	scanf("%f", &n.a);
+	printf("\tInforme o valor para b: ");
+	scanf("%f", &n.b);
+	return n;
+	
+}
+
+void escrever_num( char frase[], Complexo n){
+	printf("\n%s\n", frase);
+	
+	if(n.b < 0)
+		printf("\t %.2f - %.2fi \n", n.a, -n.b);
+	else
+		printf("\t %.2f + %.2fi \n", n.a, n.b);
+}
+
+Complexo somar_lados( Complexo n1, Complexo n2){
+	Complexo res;
+	
+	res.a = n1.a + n2.a;
+	res.b = n1.b + n2.b;
+	return res;
+}
+
+Complexo subtrair_lados( Complexo n1, Complexo n2){
+	Complexo res;
+	
+	res.a = n1.a - n2.a;
+	res.b = n1.b - n2.b;
+	return res;
+}
+
+Complexo multiplicar_lados( Complexo n1, Complexo n2){
+	Complexo res;
+	
+	if( n1.b ==0 || n2.b == 0){
+		res.a = (n1.a * n2.a) + (n1.a * n2.b);
+		res.b = (n1.b * n2.a) + (n1.b * n2.b);
+		return res;
+	}
+	
+	else{
+		res.a = (n1.a * n2.a) + ((n1.b * n2.b) * -1);
+		res.b = (n1.b * n2.a) + (n1.a * n2.b);
+		return res;
+	}
+}
+
+Complexo conjugado( Complexo n1){
+	Complexo con;
+	
+	con.a = n1.a;
+	con.b = -1*n1.b;
+	return con;
+}
+
+Complexo dividir_lados( Complexo n1, Complexo n2){
+	Complexo res, aux1, aux2, conj;
+	
+	conj = conjugado(n2);
+	
+	aux1 = multiplicar_lados(n1, conj);
+	aux2 = multiplicar_lados(n2, conj);
+	
+	res.a = aux1.a / aux2.a;
+	res.b = aux1.b / aux2.a;
+	return res;
+		
+}
+
+Complexo real_puro( char frase[], Complexo n){
+	if(n.a == 0 ) 
+		printf("\nEste número é Real Puro.\n");
+	else
+		printf("\nEste número não é Real Puro.\n");
+}
+
+Complexo imaginario_puro( char frase[], Complexo n){
+	if(n.b == 0 ) 
+		printf("\nEste número é Imaginário Puro.\n");
+	else
+		printf("\nEste número não é Imaginário Puro.\n");
+}
+
+Complexo iguais( char frase[], Complexo n){
+	if(n.a == n.b)
+		printf("\nAmbas as partes, real e imaginária são iguais. ");
+	else
+		printf("\nAs partes, real e imaginária NÃO são iguais.");
+}
+
+float modulo( Complexo n){
+	float res;
+	
+	res = (float)sqrt(n.a * n.a + n.b * n.b);
+	return res;
+}
+
+
+int main(){
+    setlocale( LC_ALL, "Portuguese" );
+    
+	Complexo ler_n1, ler_n2, res_soma, res_sub;
+	Complexo res_conjugado, res_mult, res_div;
+	float res_mod;
+	char opcao, continuar;
+	
+	printf("\n\tIniciando a calculadora de números complexos. ");
+	printf("\n\t\tAluno: Matheus Melo da Silva.\n ");
+	printf("\n\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\t");
+	
+	ler_n1 = ler_num( "Lendo o número Complexo 1: " );
+	escrever_num( "Número Complexo Digitado: ", ler_n1);
+
+	ler_n2 = ler_num( "Lendo um número Complexo 2: " );
+	escrever_num( "Número Complexo Digitado: ", ler_n2);
+	
+	do{
+	printf("\nInforme a opção de calculo que deseja fazer com os números complexos: ");
+	printf("\n------------------------------------------------\n\t");
+	printf("\nDigite 1 para saber se é Real Puro; ");
+	printf("\n------------------------------------------------\n\t");
+	printf("\nDigite 2 para saber se é Imaginário Puro; ");
+	printf("\n------------------------------------------------\n\t");
+	printf("\nDigite 3 para somar os dois números; ");
+	printf("\n------------------------------------------------\n\t");
+	printf("\nDigite 4 para subtrair os dois; ");
+	printf("\n------------------------------------------------\n\t");
+	printf("\nDigite 5 para multiplicar os dois; ");
+	printf("\n------------------------------------------------\n\t");
+	printf("\nDigite 6 para dividir os dois; ");
+	printf("\n------------------------------------------------\n\t");
+	printf("\nDigite 7 para verificar se os dois são iguais; ");	
+	printf("\n------------------------------------------------\n\t");
+	printf("\nDigite 8 para saber o módulo do número 1; ");
+	printf("\n------------------------------------------------\n\t");	
+	printf("\nDigite 9 para saber o conjugado do número 1; ");
+	printf("\n------------------------------------------------\n\t");
+	scanf(" %c", &opcao);
+	scanf("");
+	
+	switch(opcao){
+		case '1':
+			real_puro( "Verificando se o num Complexo 1 é Real Puro: ", ler_n1);
+			break;
+		case '2':
+			imaginario_puro( "Verificando se o num Complexo 1 é Imaginário Puro: ", ler_n1);
+			break;
+		case '3': 
+			res_soma = somar_lados(ler_n1, ler_n2);
+			escrever_num( "Soma dos números Complexos: ", res_soma);
+			break;
+		case '4':
+			res_sub = subtrair_lados(ler_n1, ler_n2);
+			escrever_num( "Subtração dos números Complexos: ", res_sub);
+			break;
+		case '5': 
+			res_mult = multiplicar_lados( ler_n1, ler_n2);
+			escrever_num( "Multiplicação dos números Complexos: ", res_mult);
+			break;
+		case '6':
+			res_div = dividir_lados( ler_n1, ler_n2);
+			escrever_num( "Divisão dos números Complexos: ", res_div);
+			break;
+		case '7':
+			iguais( "Verificando se ambas partes do num Complexo 1 são iguais: ", ler_n1);
+			break;
+		case '8':
+			res_mod = modulo(ler_n1);
+			printf("\nMódulo do num Complexo 1: %f\n ", res_mod);
+			break;
+		case '9': 
+			res_conjugado = conjugado( ler_n1);
+			escrever_num( "Conjugado do num Complexo 1: ", res_conjugado);
+			break;
+		default:
+			printf("\nVocê digitou uma operação inválida.");
+	}
+	
+	printf("\nDeseja escolher outra opção? (S/N)");
+	scanf(" %c", &continuar);
+	}while(continuar == 's' || continuar == 'S');
+	
+	printf("\n\tFINAL DO PROGRAMA!");
+}
